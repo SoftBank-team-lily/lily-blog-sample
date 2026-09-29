@@ -13,7 +13,7 @@ Spring Boot 기반의 최소 블로그 CRUD 서비스. 이 앱 자체는 중요�
 |---|---|
 | 원클릭 배포 | 레포 연결 → 빌드 → 실행 → `GET /api/posts` 200 |
 | CI/CD (블루-그린) | `APP_COLOR`, `APP_VERSION` 주입 → `GET /version` 으로 전환 확인 |
-| 카나리 | nginx `weight` 조정 → `GET /whoami` 반복 호출로 분산 비율 확인 |
+| 카나리 | 트래픽 가중치 조정 → `GET /whoami` 반복 호출로 분산 비율 확인 |
 | DB 마이그레이션 | Flyway `V1`, `V2` → 배포 시 자동 적용, 버전 테이블 확인 |
 | 로깅 | `prod` 프로파일에서 JSON 한 줄 로그 출력 (그대로 수집 가능) |
 | 롤백 | `GET /chaos/error` 로 에러율 급증 → 자동 롤백 트리거 |
@@ -56,18 +56,16 @@ gradle wrapper          # 최초 1회, gradlew 생성
 curl http://localhost:8080/api/posts
 ```
 
-### Docker Compose (Postgres + 블루/그린 2대 + nginx)
+### Docker
 
 ```bash
-docker compose up --build
+docker build -t lily-blog-sample .
+docker run -p 8080:8080 -e SPRING_PROFILES_ACTIVE=local lily-blog-sample
 curl http://localhost:8080/api/posts
-
-# LB 분산 확인 — blue 9 : green 1 로 섞여 나와야 함
-for i in $(seq 1 20); do curl -s localhost:8080/whoami; echo; done
-
-# 장애 주입 → 롤백 시연
-curl -s localhost:8080/chaos/error
 ```
+
+> CI 파이프라인, 블루-그린/카나리 구성, LB 설정은 이 레포에 두지 않는다.
+> 모두 배포 플랫폼 쪽 모듈이 담당하며, 이 레포는 순수한 배포 대상 앱만 포함한다.
 
 ## 환경변수
 
