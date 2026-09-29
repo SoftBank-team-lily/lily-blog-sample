@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/blog}
+    username: ${DB_USERNAME:blog}
+    password: ${DB_PASSWORD:blog}
+    hikari:
+      maximum-pool-size: ${DB_POOL_SIZE:10}
