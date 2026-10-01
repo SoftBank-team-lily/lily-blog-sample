@@ -24,6 +24,8 @@ dependencies {
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'org.postgresql:postgresql'
     runtimeOnly 'org.flywaydb:flyway-database-postgresql'
+    // /actuator/prometheus. lily-observer 가 이 지표로 카나리 위험도를 판정한다
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
